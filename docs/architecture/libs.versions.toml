@@ -1,0 +1,75 @@
+# NRLatch — Gradle Version Catalog
+#
+# IMPORTANT — what is intentionally absent from this catalog:
+#   * NO Compose dependencies (androidx.compose.*, compose-bom, etc.). The UI is XML
+#     ConstraintLayout. See ADR-002.
+#   * NO Firebase, Crashlytics, or analytics SDKs. The app is fully client-side
+#     and makes zero network calls post-install. See 00-overview.md, "Non-negotiable
+#     constraints".
+#   * NO libraries that require the INTERNET permission. The merged manifest excises
+#     INTERNET via tools:node="remove".
+#
+# This file will be moved to the project root during implementation; for the Phase 1
+# architecture freeze it lives under docs/architecture/.
+
+[versions]
+agp = "9.1.0"
+kotlin = "2.3.20"
+# TODO: Pin to exact KSP build matching Kotlin 2.3.20 once released — verify with
+#       https://github.com/google/ksp/releases. The "x" placeholder is the patch
+#       suffix attached to the Kotlin compiler version.
+ksp = "2.3.20-1.0.x"
+hilt = "2.56.2"
+hilt-androidx = "1.2.0"          # androidx.hilt:hilt-compiler for BroadcastReceiver injection
+coroutines = "1.9.0"             # Kotlin coroutines aligned with K2 stable
+datastore = "1.2.1"
+core-ktx = "1.15.0"
+appcompat = "1.7.0"
+constraintlayout = "2.2.0"
+material = "1.12.0"
+lifecycle = "2.8.7"
+junit = "4.13.2"
+mockk = "1.13.13"
+turbine = "1.2.0"                # Flow testing
+truth = "1.4.4"
+dependency-analysis = "2.10.1"
+
+[libraries]
+# AndroidX core / UI (XML, no Compose)
+androidx-core-ktx              = { module = "androidx.core:core-ktx",                                version.ref = "core-ktx" }
+androidx-appcompat             = { module = "androidx.appcompat:appcompat",                          version.ref = "appcompat" }
+androidx-constraintlayout      = { module = "androidx.constraintlayout:constraintlayout",            version.ref = "constraintlayout" }
+androidx-material              = { module = "com.google.android.material:material",                  version.ref = "material" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx",              version.ref = "lifecycle" }
+
+# Coroutines
+kotlinx-coroutines-core    = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core",    version.ref = "coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-coroutines-test    = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test",    version.ref = "coroutines" }
+
+# DataStore Preferences (NOT Proto)
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+
+# Hilt
+hilt-android           = { module = "com.google.dagger:hilt-android",   version.ref = "hilt" }
+hilt-compiler          = { module = "com.google.dagger:hilt-compiler",  version.ref = "hilt" }
+hilt-androidx-compiler = { module = "androidx.hilt:hilt-compiler",      version.ref = "hilt-androidx" }
+
+# Testing (JVM unit tests)
+junit   = { module = "junit:junit",                  version.ref = "junit" }
+mockk   = { module = "io.mockk:mockk",               version.ref = "mockk" }
+turbine = { module = "app.cash.turbine:turbine",     version.ref = "turbine" }
+truth   = { module = "com.google.truth:truth",       version.ref = "truth" }
+
+[plugins]
+android-application = { id = "com.android.application",                       version.ref = "agp" }
+android-library     = { id = "com.android.library",                           version.ref = "agp" }
+kotlin-android      = { id = "org.jetbrains.kotlin.android",                  version.ref = "kotlin" }
+kotlin-jvm          = { id = "org.jetbrains.kotlin.jvm",                      version.ref = "kotlin" }
+ksp                 = { id = "com.google.devtools.ksp",                       version.ref = "ksp" }
+hilt                = { id = "com.google.dagger.hilt.android",                version.ref = "hilt" }
+dependency-analysis = { id = "com.autonomousapps.dependency-analysis",        version.ref = "dependency-analysis" }
+
+[bundles]
+coroutines = ["kotlinx-coroutines-core", "kotlinx-coroutines-android"]
+test-jvm   = ["junit", "mockk", "kotlinx-coroutines-test", "turbine", "truth"]
